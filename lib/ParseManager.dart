@@ -1,5 +1,3 @@
-import "dart:io";
-
 import "package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart";
 
 class ParseManager {
@@ -25,11 +23,6 @@ class ParseManager {
         clientKey: _clientKey,
         autoSendSessionId: true,
         debug: true,
-        clientCreator: (
-                {bool sendSessionId = true,
-                SecurityContext? securityContext}) =>
-            ParseDioClient(
-                sendSessionId: sendSessionId, securityContext: securityContext),
       );
       _initialized = true;
     }
