@@ -47,22 +47,22 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('登陆界面'),
+        title: const Text('登陆界面'),
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 '当前用户: $_currentUser',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
@@ -70,13 +70,13 @@ class _LoginPageState extends State<LoginPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding: const EdgeInsets.symmetric(
                     vertical: 12.0,
                     horizontal: 16.0,
                   ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
@@ -85,13 +85,13 @@ class _LoginPageState extends State<LoginPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding: const EdgeInsets.symmetric(
                     vertical: 12.0,
                     horizontal: 16.0,
                   ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () async {
                   String username = _usernameController.text;
@@ -100,9 +100,9 @@ class _LoginPageState extends State<LoginPage> {
                   _getCurrentUser();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue, // 按钮颜色
+                  backgroundColor: Colors.blue, // 按钮颜色
                   elevation: 5.0, // 按钮阴影
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     vertical: 16.0,
                     horizontal: 32.0,
                   ),
@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   '登陆',
                   style: TextStyle(
                     fontSize: 16.0,
@@ -118,16 +118,16 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () async {
                   await ParseManager().logoutUser();
                   _getCurrentUser();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue, // 按钮颜色
+                  backgroundColor: Colors.blue, // 按钮颜色
                   elevation: 5.0, // 按钮阴影
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     vertical: 16.0,
                     horizontal: 32.0,
                   ),
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   '登出',
                   style: TextStyle(
                     fontSize: 16.0,
