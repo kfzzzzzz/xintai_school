@@ -43,6 +43,12 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  Future<void> _handleLoginFailure(String result) async {
+    setState(() {
+      _currentUser = result;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,8 +102,13 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () async {
                   String username = _usernameController.text;
                   String password = _passwordController.text;
-                  await ParseManager().loginUser(username, password);
-                  _getCurrentUser();
+                  String result =
+                      await ParseManager().loginUser(username, password);
+                  if (result == 'Login successful!') {
+                    _getCurrentUser();
+                  } else {
+                    _handleLoginFailure(result);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, // 按钮颜色

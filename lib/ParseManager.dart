@@ -36,7 +36,7 @@ class ParseManager {
     return currentUser.username;
   }
 
-  Future<void> loginUser(String username, String password) async {
+  Future<String> loginUser(String username, String password) async {
     try {
       // 创建 ParseUser 对象并设置用户名和密码
       final ParseUser user = ParseUser(username, password, null);
@@ -47,15 +47,14 @@ class ParseManager {
       // 检查登录是否成功
       if (response.success) {
         // 登录成功
-        print('Login successful!');
-        // 这里可以做一些跳转到下一个页面等操作
+        return 'Login successful!';
       } else {
-        // 登录失败，输出失败信息
-        print('Login failed: ${response.error}');
+        // 登录失败，返回失败信息
+        return 'Login failed: ${response.error?.message ?? 'Unknown error'}';
       }
     } catch (e) {
-      // 捕获异常
-      print('Error occurred during login: $e');
+      // 捕获异常，返回错误信息
+      return 'Error occurred during login: $e';
     }
   }
 
