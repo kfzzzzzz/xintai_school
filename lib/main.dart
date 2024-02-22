@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xintai_school/ParseManager.dart';
+import 'package:xintai_school/SchoolComputerSys/SchoolComputerSysPage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,19 +35,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _getCurrentUser();
-  }
-
-  Future<void> _getCurrentUser() async {
-    String currentUser = await ParseManager().currentUser();
-    setState(() {
-      _currentUser = currentUser;
-    });
-  }
-
-  Future<void> _handleLoginFailure(String result) async {
-    setState(() {
-      _currentUser = result;
-    });
   }
 
   @override
@@ -99,16 +87,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20.0),
               ElevatedButton(
-                onPressed: () async {
-                  String username = _usernameController.text;
-                  String password = _passwordController.text;
-                  String result =
-                      await ParseManager().loginUser(username, password);
-                  if (result == 'Login successful!') {
-                    _getCurrentUser();
-                  } else {
-                    _handleLoginFailure(result);
-                  }
+                onPressed: () {
+                  _login();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, // 按钮颜色
@@ -132,8 +112,8 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () async {
-                  await ParseManager().logoutUser();
-                  _getCurrentUser();
+                  await _logout();
+                  await ParseManager().fetchComputer('3D110');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, // 按钮颜色
@@ -158,6 +138,60 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _login() async {
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+    String result = await ParseManager().loginUser(username, password);
+    if (result == 'Login successful!') {
+      _getCurrentUser().then((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SchoolComputerSysPage()),
+        );
+      });
+    } else {
+      _handleLoginFailure(result);
+    }
+  }
+
+  Future<void> _logout() async {
+    await ParseManager().logoutUser();
+    _getCurrentUser();
+  }
+
+  Future<void> _getCurrentUser() async {
+    String currentUser = await ParseManager().currentUser();
+    setState(() {
+      _currentUser = currentUser;
+      if (_currentUser != '无用户') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SchoolComputerSysPage()),
+        );
+      }
+    });
+  }
+
+  void _handleLoginFailure(String failureReason) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Login Failed'),
+          content: Text(failureReason),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
