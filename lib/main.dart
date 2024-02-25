@@ -113,7 +113,6 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: () async {
                   await _logout();
-                  await ParseManager().fetchComputer('3D110');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, // 按钮颜色

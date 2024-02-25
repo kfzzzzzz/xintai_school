@@ -49,3 +49,35 @@ class Computer extends ParseObject implements ParseCloneable {
   ParseRelation<ComputerRoom> get roomRelation =>
       getRelation<ComputerRoom>(keyRoom);
 }
+
+class ComputerLog extends ParseObject implements ParseCloneable {
+  ComputerLog() : super(_keyTableName);
+  ComputerLog.clone() : this();
+
+  @override
+  clone(Map map) =>
+      ComputerLog.clone()..fromJson(Map<String, dynamic>.from(map));
+
+  static const String _keyTableName = 'computerLog';
+  static const String keyState = 'state';
+  static const String keyTeacher = 'Teacher';
+  static const String keyDescribe = 'Describe';
+  static const String keyRepairDate = 'RepairDate';
+  static const String keyComputer = 'Computer';
+
+  bool get state => get<bool>(keyState) ?? false;
+  set state(bool state) => set<bool>(keyState, state);
+
+  String get teacher => get<String>(keyTeacher) ?? '';
+  set teacher(String teacher) => set<String>(keyTeacher, teacher);
+
+  String get describe => get<String>(keyDescribe) ?? '';
+  set describe(String describe) => set<String>(keyDescribe, describe);
+
+  DateTime? get repairDate => get<DateTime?>(keyRepairDate);
+  set repairDate(DateTime? repairDate) =>
+      set<DateTime?>(keyRepairDate, repairDate);
+
+  ParseRelation<Computer> get computerRelation =>
+      getRelation<Computer>(keyComputer);
+}

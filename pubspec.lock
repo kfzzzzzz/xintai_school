@@ -105,6 +105,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.6"
+  data_table_2:
+    dependency: "direct main"
+    description:
+      name: data_table_2
+      sha256: cec4010dd756bd7d0cc3eb8a30932b8109608132c6c8d643e80ea412d3e51a9c
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.5.10"
   dbus:
     dependency: transitive
     description:
@@ -216,6 +224,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.2"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.19.0"
   js:
     dependency: transitive
     description:
