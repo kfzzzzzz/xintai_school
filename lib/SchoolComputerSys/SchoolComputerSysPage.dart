@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:xintai_school/ParseManager.dart';
-import 'package:xintai_school/SchoolComputerSys/model/SchoolComputerModel.dart';
+import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerParseManager.dart';
+import 'package:xintai_school/SchoolComputerSys/SchoolComputerSettingPage.dart';
+import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerModel.dart';
 
 import 'bloc/school_computer_sys_bloc.dart';
 
@@ -55,9 +57,10 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                         height: 150),
                   ),
                   Expanded(
-                    child: _buildComputerContent(state.computers),
+                    child: _buildComputerContent(
+                        state.computers, _selectComputerRoom.room),
                   ),
-                  _buildComputerSetting(_selectComputerRoom),
+                  _buildComputerAddDelete(_selectComputerRoom),
                 ]);
           } else if (state is SchoolComputerErrorState) {
             return Center(
@@ -107,7 +110,8 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     );
   }
 
-  Widget _buildComputerContent(List<List<Computer?>> computers) {
+  Widget _buildComputerContent(
+      List<List<Computer?>> computers, String computerRoom) {
     int rowCount = computers.length;
     int columnCount = computers.isEmpty ? 0 : computers[0].length;
 
@@ -148,17 +152,44 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
           if (computer == null) {
             iconData = Icons.do_not_disturb;
             iconColor = Colors.black;
+
+            return Container(
+              alignment: Alignment.center,
+              child: Icon(
+                iconData,
+                color: iconColor,
+              ),
+            );
           } else {
             iconData = Icons.personal_video;
             iconColor = computer.state == true ? Colors.green : Colors.red;
           }
 
-          return Container(
-            alignment: Alignment.center,
-            color: Colors.grey[200],
-            child: Icon(
-              iconData,
-              color: iconColor,
+          return Material(
+            elevation: 4.0, // 设置阴影的高度，这里设置为4.0，您可以根据需要调整
+            borderRadius: BorderRadius.circular(8.0), // 设置边框圆角
+            child: InkWell(
+              onLongPress: () async {
+                await SchoolComputerParseManager()
+                    .fetchComputerLog(computer)
+                    .then((value) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SchoolComputerSettingPage(
+                            computer: computer,
+                            computerRoom: computerRoom,
+                            computerLogs: value)),
+                  ).then((value) {
+                    _bloc.add(SchoolComputerLoadEvent(
+                        computerRoom: _selectComputerRoom));
+                  });
+                });
+              },
+              child: Icon(
+                iconData,
+                color: iconColor,
+              ),
             ),
           );
         }
@@ -166,7 +197,7 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     );
   }
 
-  Widget _buildComputerSetting(ComputerRoom computerRoom) {
+  Widget _buildComputerAddDelete(ComputerRoom computerRoom) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -203,7 +234,7 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                         TextButton(
                           onPressed: () async {
                             try {
-                              await ParseManager()
+                              await SchoolComputerParseManager()
                                   .addComputer(computerRoom, row, column, true);
                               Fluttertoast.showToast(
                                 msg: "添加计算机成功",

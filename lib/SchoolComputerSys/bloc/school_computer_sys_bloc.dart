@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:xintai_school/ParseManager.dart';
-import 'package:xintai_school/SchoolComputerSys/model/SchoolComputerModel.dart';
+import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerModel.dart';
+import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerParseManager.dart';
 
 part 'school_computer_sys_event.dart';
 part 'school_computer_sys_state.dart';
@@ -13,7 +13,9 @@ class SchoolComputerSysBloc
       : super(const SchoolComputerInitialState(computerRooms: [])) {
     on<SchoolComputerInitialEvent>((event, emit) async {
       emit(SchoolComputerLoadingState());
-      await ParseManager().fetchComputerRoom().then((value) async {
+      await SchoolComputerParseManager()
+          .fetchComputerRoom()
+          .then((value) async {
         computerRooms = value;
         if (value == []) {
           emit(const SchoolComputerErrorState("数据为空1"));
@@ -21,7 +23,7 @@ class SchoolComputerSysBloc
           emit(SchoolComputerInitialState(computerRooms: computerRooms));
           try {
             final computers =
-                await ParseManager().fetchComputer(value.first.room);
+                await SchoolComputerParseManager().fetchComputer(value.first);
             emit(SchoolComputerLoadedState(computerRooms, computers));
           } catch (error) {
             emit(SchoolComputerErrorState("错误1:$error"));
@@ -33,7 +35,9 @@ class SchoolComputerSysBloc
     });
     on<SchoolComputerLoadEvent>((event, emit) async {
       emit(SchoolComputerLoadingState());
-      await ParseManager().fetchComputer(event.computerRoom.room).then((value) {
+      await SchoolComputerParseManager()
+          .fetchComputer(event.computerRoom)
+          .then((value) {
         if (value.isEmpty) {
           emit(const SchoolComputerErrorState("数据为空2"));
         } else {
