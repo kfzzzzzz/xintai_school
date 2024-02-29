@@ -75,6 +75,10 @@ class SchoolComputerParseManager {
     computer.row = row;
     computer.column = column;
 
+    if (row == 0 || column == 0) {
+      return;
+    }
+
     // 检查数据库中是否存在与新计算机对象的关联、行和列都不重叠的计算机对象
     QueryBuilder<ParseObject> queryBuilder =
         QueryBuilder<ParseObject>(Computer())

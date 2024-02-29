@@ -11,7 +11,7 @@ class ParseManager {
   ParseManager._internal();
 
   static const String _applicationId = 'kfzzzzzz.SimulateLocation';
-  static const String _serverUrl = 'http://121.43.102.102:1337/parse';
+  static const String _serverUrl = 'http://kfzzzzzz.cn:1337/parse';
   static const String _clientKey = 'kfzzzzzz.SimulateLocation';
 
   bool _initialized = false;
@@ -69,6 +69,23 @@ class ParseManager {
       }
     } catch (e) {
       print('Error occurred during Logout: $e');
+    }
+  }
+
+  Future<String> registerUser(
+      String name, String password, String email) async {
+    try {
+      final ParseUser user = ParseUser(name, password, email);
+
+      final ParseResponse response = await user.signUp();
+
+      if (response.success) {
+        return 'signUp successful!';
+      } else {
+        return 'signUp failed: ${response.error?.message ?? 'Unknown error'}';
+      }
+    } catch (e) {
+      return 'Error occurred during signUp: $e';
     }
   }
 

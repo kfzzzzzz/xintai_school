@@ -49,7 +49,14 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildDropDownButton(state.computerRooms),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildDropDownButton(state.computerRooms),
+                      ),
+                      _buildComputerAddDelete(_selectComputerRoom),
+                    ],
+                  ),
                   Center(
                     child: Lottie.asset(
                         'assets/blackboard.json', // 替换为您的Lottie动画文件路径
@@ -60,7 +67,6 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                     child: _buildComputerContent(
                         state.computers, _selectComputerRoom.room),
                   ),
-                  _buildComputerAddDelete(_selectComputerRoom),
                 ]);
           } else if (state is SchoolComputerErrorState) {
             return Center(
