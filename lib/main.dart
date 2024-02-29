@@ -20,9 +20,6 @@ class LoginApp extends StatelessWidget {
       home: Builder(
         builder: (BuildContext context) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text('xintai_school'),
-            ),
             body: LoginPage(),
             bottomNavigationBar: kIsWeb ? BottomBar() : null,
           );

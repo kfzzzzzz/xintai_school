@@ -31,13 +31,6 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                '当前用户: $_currentUser',
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               const SizedBox(height: 20.0),
               TextField(
                 controller: _usernameController,
