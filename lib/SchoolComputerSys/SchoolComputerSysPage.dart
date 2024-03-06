@@ -57,12 +57,7 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                       _buildComputerAddDelete(_selectComputerRoom),
                     ],
                   ),
-                  Center(
-                    child: Lottie.asset(
-                        'assets/blackboard.json', // 替换为您的Lottie动画文件路径
-                        fit: BoxFit.contain,
-                        height: 150),
-                  ),
+                  _buildComputerRoomDetail(state.computers),
                   Expanded(
                     child: _buildComputerContent(
                         state.computers, _selectComputerRoom.room),
@@ -113,6 +108,39 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
           );
         }).toList(),
       ),
+    );
+  }
+
+  Widget _buildComputerRoomDetail(List<List<Computer?>> computers) {
+    List<int> computerRoomDetail = countComputers(computers);
+    return Row(
+      children: [
+        Expanded(
+          child: Lottie.asset('assets/blackboard.json', // 替换为您的Lottie动画文件路径
+              fit: BoxFit.contain,
+              height: 150),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '电脑总数: ${computerRoomDetail[0]}台',
+              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+            ),
+            Text(
+              '故障数量: ${computerRoomDetail[1]}台',
+              style: TextStyle(color: Colors.red, height: 2, fontSize: 20),
+            ),
+            Text(
+              '可用数量: ${computerRoomDetail[2]}台',
+              style: TextStyle(color: Colors.green, height: 2, fontSize: 20),
+            ),
+          ],
+        ),
+        SizedBox(
+          width: 50,
+        )
+      ],
     );
   }
 
@@ -301,5 +329,18 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
   void dispose() {
     _bloc.close();
     super.dispose();
+  }
+
+  List<int> countComputers(List<List<Computer?>> computers) {
+    int totalCount = 0;
+    int falseCount = 0;
+    for (List<Computer?> sublist in computers) {
+      totalCount += sublist.where((computer) => computer != null).length;
+      falseCount +=
+          sublist.where((computer) => computer?.state == false).length;
+    }
+    int trueCount = totalCount - falseCount;
+
+    return [totalCount, falseCount, trueCount];
   }
 }
