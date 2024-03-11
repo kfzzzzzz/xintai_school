@@ -1,11 +1,11 @@
 {
-    "name": "xintai_school",
-    "short_name": "xintai_school",
+    "name": "浙江公路技师学院路桥学院机房维护系统",
+    "short_name": "路桥学院机房维护系统",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "浙江公路技师学院路桥学院机房维护系统，用于机房信息查看，机器维修上报，机房时间查询等.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
