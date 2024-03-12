@@ -70,7 +70,8 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                       _buildComputerAddDelete(_selectComputerRoom),
                     ],
                   ),
-                  _buildComputerRoomDetail(state.computers),
+                  _buildComputerRoomDetail(
+                      state.computers, state.roomReservations),
                   Expanded(
                     child: _buildComputerContent(
                         state.computers, _selectComputerRoom.room),
@@ -124,9 +125,11 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     );
   }
 
-  Widget _buildComputerRoomDetail(List<List<Computer?>> computers, List) {
+  Widget _buildComputerRoomDetail(
+      List<List<Computer?>> computers, List<RoomReservation> roomReservations) {
     List<int> computerRoomComputerDetail = countComputers(computers);
-    List<String> computerRoomTeacherDetail = computerRoomTeacher
+    List<String> computerRoomTeacherDetail =
+        computerRoomTeacher(roomReservations);
     return Row(
       children: [
         Expanded(
@@ -158,15 +161,11 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '当前课程: ${computerRoomDetail[0]}台',
+              '当前课程: ${computerRoomTeacherDetail[1]}',
               style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
             ),
             Text(
-              '当前教师: ${computerRoomDetail[1]}台',
-              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
-            ),
-            Text(
-              '可用数量: ${computerRoomDetail[2]}台',
+              '当前教师: ${computerRoomTeacherDetail[0]}',
               style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
             ),
           ],
