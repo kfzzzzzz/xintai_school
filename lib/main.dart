@@ -13,7 +13,7 @@ class LoginApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'xintai_school',
+      title: '浙江公路技师学院路桥学院机房维护系统',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
