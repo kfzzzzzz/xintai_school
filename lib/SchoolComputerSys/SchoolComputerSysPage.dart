@@ -28,7 +28,20 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('路桥学院电脑状况登记'),
+        title: const Text('路桥学院机房情况'),
+            actions: <Widget>[
+      IconButton(
+        icon: const Icon(Icons.help, color: Colors.grey),
+        onPressed: () {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _buildHelpDialog(context);
+      },
+    );
+        },
+      ),
+    ],
       ),
       body: BlocBuilder<SchoolComputerSysBloc, SchoolComputerSysState>(
         bloc: _bloc,
@@ -160,7 +173,6 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
         int rowIndex = index ~/ (columnCount + 1);
         int colIndex = index % (columnCount + 1);
 
-        // For headers
         if (rowIndex == 0 || colIndex == 0) {
           String text;
           if (rowIndex == 0 && colIndex == 0) {
@@ -231,6 +243,8 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     );
   }
 
+
+  //增删电脑的弹窗
   Widget _buildComputerAddDelete(ComputerRoom computerRoom) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -325,11 +339,30 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     );
   }
 
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
-  }
+
+// 帮助弹窗
+Widget _buildHelpDialog(BuildContext context) {
+  return AlertDialog(
+    title: Text('使用帮助'),
+    content: SingleChildScrollView(
+      child: ListBody(
+        children: <Widget>[
+          Text('1.方向：前方为讲台方向'),
+          Text('2.上报：长按对应的电脑图标，进入上报页面'),
+          Text('3.状态：绿色机器代表可用，红色代表存在故障未解决'),
+        ],
+      ),
+    ),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).pop(); // 关闭对话框
+        },
+        child: Text('关闭'),
+      ),
+    ],
+  );
+}
 
   List<int> countComputers(List<List<Computer?>> computers) {
     int totalCount = 0;
@@ -342,5 +375,11 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     int trueCount = totalCount - falseCount;
 
     return [totalCount, falseCount, trueCount];
+  }
+
+  @override
+  void dispose() {
+    _bloc.close();
+    super.dispose();
   }
 }
