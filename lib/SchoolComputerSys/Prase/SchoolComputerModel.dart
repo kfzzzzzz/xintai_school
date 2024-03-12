@@ -81,3 +81,34 @@ class ComputerLog extends ParseObject implements ParseCloneable {
   ParseRelation<Computer> get computerRelation =>
       getRelation<Computer>(keyComputer);
 }
+
+class RoomReservation extends ParseObject implements ParseCloneable {
+  RoomReservation() : super(_keyTableName);
+  RoomReservation.clone() : this();
+
+  @override
+  RoomReservation clone(Map<String, dynamic> map) =>
+      RoomReservation.clone()..fromJson(Map<String, dynamic>.from(map));
+
+  static const String _keyTableName = 'roomReservation';
+  static const String keyTeacher = 'Teacher';
+  static const String keyStartDate = 'StartDate';
+  static const String keyEndDate = 'EndDate';
+  static const String keyComputerRoom = 'ComputerRoom';
+  static const String keyCourse = 'Course';
+
+  String get teacher => get<String>(keyTeacher) ?? '';
+  set teacher(String teacher) => set<String>(keyTeacher, teacher);
+
+  DateTime? get startDate => get<DateTime?>(keyStartDate);
+  set startDate(DateTime? startDate) => set<DateTime?>(keyStartDate, startDate);
+
+  DateTime? get endDate => get<DateTime?>(keyEndDate);
+  set endDate(DateTime? endDate) => set<DateTime?>(keyEndDate, endDate);
+
+  ParseRelation<ComputerRoom> get computerRoomRelation =>
+      getRelation<ComputerRoom>(keyComputerRoom);
+
+  String get course => get<String>(keyCourse) ?? '';
+  set course(String course) => set<String>(keyCourse, course);
+}

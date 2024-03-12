@@ -164,4 +164,30 @@ class SchoolComputerParseManager {
       print('维修信息上报时出错：$e');
     }
   }
+
+  Future<List<RoomReservation>> fetchRoomReservation(
+      ComputerRoom computerRoom) async {
+    QueryBuilder<ParseObject> queryRoom =
+        QueryBuilder<ParseObject>(RoomReservation())
+          ..whereEqualTo('ComputerRoom', computerRoom);
+
+    List<RoomReservation> roomReservations = [];
+
+    var apiResponse = await queryRoom.query();
+
+    if (apiResponse.success) {
+      if (apiResponse.count == 0) {
+      } else {
+        for (var parseObject in apiResponse.result) {
+          var roomReservation = RoomReservation.clone()
+            ..fromJson(parseObject.toJson());
+          roomReservations.add(roomReservation);
+        }
+      }
+    } else {
+      print('Failed to fetch data: ${apiResponse.error!.message}');
+    }
+
+    return roomReservations;
+  }
 }

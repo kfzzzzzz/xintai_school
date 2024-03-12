@@ -26,7 +26,9 @@ class ParseManager {
         debug: true,
         registeredSubClassMap: <String, ParseObjectConstructor>{
           'computerRoom': () => ComputerRoom(),
-          'computer': () => Computer()
+          'computer': () => Computer(),
+          'computerLog': () => ComputerLog(),
+          'RoomReservation': () => RoomReservation()
         },
       );
       _initialized = true;

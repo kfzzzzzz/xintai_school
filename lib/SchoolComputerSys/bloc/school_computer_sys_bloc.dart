@@ -24,7 +24,10 @@ class SchoolComputerSysBloc
           try {
             final computers =
                 await SchoolComputerParseManager().fetchComputer(value.first);
-            emit(SchoolComputerLoadedState(computerRooms, computers));
+            final roomReservations = await SchoolComputerParseManager()
+                .fetchRoomReservation(value.first);
+            emit(SchoolComputerLoadedState(
+                computerRooms, computers, roomReservations));
           } catch (error) {
             emit(SchoolComputerErrorState("错误1:$error"));
           }
@@ -37,11 +40,14 @@ class SchoolComputerSysBloc
       emit(SchoolComputerLoadingState());
       await SchoolComputerParseManager()
           .fetchComputer(event.computerRoom)
-          .then((value) {
+          .then((value) async {
         if (value.isEmpty) {
           emit(const SchoolComputerErrorState("数据为空2"));
         } else {
-          emit(SchoolComputerLoadedState(computerRooms, value));
+          final roomReservations = await SchoolComputerParseManager()
+              .fetchRoomReservation(event.computerRoom);
+          emit(SchoolComputerLoadedState(
+              computerRooms, value, roomReservations));
         }
       }).onError((error, stackTrace) {
         emit(SchoolComputerErrorState("错误3:$error"));

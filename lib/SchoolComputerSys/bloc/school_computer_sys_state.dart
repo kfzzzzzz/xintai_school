@@ -19,8 +19,10 @@ class SchoolComputerLoadingState extends SchoolComputerSysState {}
 class SchoolComputerLoadedState extends SchoolComputerSysState {
   final List<ComputerRoom> computerRooms;
   final List<List<Computer?>> computers;
+  final List<RoomReservation> roomReservations;
 
-  const SchoolComputerLoadedState(this.computerRooms, this.computers);
+  const SchoolComputerLoadedState(
+      this.computerRooms, this.computers, this.roomReservations);
 
   @override
   List<Object> get props => [computerRooms];

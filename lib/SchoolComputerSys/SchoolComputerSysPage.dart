@@ -29,19 +29,19 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('路桥学院机房情况'),
-            actions: <Widget>[
-      IconButton(
-        icon: const Icon(Icons.help, color: Colors.grey),
-        onPressed: () {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _buildHelpDialog(context);
-      },
-    );
-        },
-      ),
-    ],
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.help, color: Colors.grey),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return _buildHelpDialog(context);
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<SchoolComputerSysBloc, SchoolComputerSysState>(
         bloc: _bloc,
@@ -124,8 +124,9 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     );
   }
 
-  Widget _buildComputerRoomDetail(List<List<Computer?>> computers) {
-    List<int> computerRoomDetail = countComputers(computers);
+  Widget _buildComputerRoomDetail(List<List<Computer?>> computers, List) {
+    List<int> computerRoomComputerDetail = countComputers(computers);
+    List<String> computerRoomTeacherDetail = computerRoomTeacher
     return Row(
       children: [
         Expanded(
@@ -137,20 +138,40 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '电脑总数: ${computerRoomDetail[0]}台',
+              '电脑总数: ${computerRoomComputerDetail[0]}台',
               style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
             ),
             Text(
-              '故障数量: ${computerRoomDetail[1]}台',
+              '故障数量: ${computerRoomComputerDetail[1]}台',
               style: TextStyle(color: Colors.red, height: 2, fontSize: 20),
             ),
             Text(
-              '可用数量: ${computerRoomDetail[2]}台',
+              '可用数量: ${computerRoomComputerDetail[2]}台',
               style: TextStyle(color: Colors.green, height: 2, fontSize: 20),
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '当前课程: ${computerRoomDetail[0]}台',
+              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+            ),
+            Text(
+              '当前教师: ${computerRoomDetail[1]}台',
+              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+            ),
+            Text(
+              '可用数量: ${computerRoomDetail[2]}台',
+              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+            ),
+          ],
+        ),
+        const SizedBox(
           width: 50,
         )
       ],
@@ -242,7 +263,6 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
       },
     );
   }
-
 
   //增删电脑的弹窗
   Widget _buildComputerAddDelete(ComputerRoom computerRoom) {
@@ -339,31 +359,31 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     );
   }
 
-
 // 帮助弹窗
-Widget _buildHelpDialog(BuildContext context) {
-  return AlertDialog(
-    title: Text('使用帮助'),
-    content: SingleChildScrollView(
-      child: ListBody(
-        children: <Widget>[
-          Text('1.方向：前方为讲台方向'),
-          Text('2.上报：长按对应的电脑图标，进入上报页面'),
-          Text('3.状态：绿色机器代表可用，红色代表存在故障未解决'),
-        ],
+  Widget _buildHelpDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text('使用帮助'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            Text('1.方向：前方为讲台方向（第一排为教室讲台前排，第八列为右侧靠门列）'),
+            Text('2.上报：长按对应的电脑图标，进入上报页面'),
+            Text('3.状态：绿色机器代表可用，红色代表存在故障未解决'),
+          ],
+        ),
       ),
-    ),
-    actions: <Widget>[
-      TextButton(
-        onPressed: () {
-          Navigator.of(context).pop(); // 关闭对话框
-        },
-        child: Text('关闭'),
-      ),
-    ],
-  );
-}
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // 关闭对话框
+          },
+          child: Text('关闭'),
+        ),
+      ],
+    );
+  }
 
+  //计算机数目计算
   List<int> countComputers(List<List<Computer?>> computers) {
     int totalCount = 0;
     int falseCount = 0;
@@ -375,6 +395,13 @@ Widget _buildHelpDialog(BuildContext context) {
     int trueCount = totalCount - falseCount;
 
     return [totalCount, falseCount, trueCount];
+  }
+
+  //当前教师计算
+  List<String> computerRoomTeacher(List<RoomReservation> roomReservations) {
+    String teacher = '无';
+    String course = '空闲';
+    return [teacher, course];
   }
 
   @override
