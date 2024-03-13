@@ -168,6 +168,16 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
               '当前教师: ${computerRoomTeacherDetail[0]}',
               style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
             ),
+            ElevatedButton(
+              onPressed: () {
+                // 在这里添加按钮点击后的逻辑，例如跳转到预约页面
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Scaffold()),
+                );
+              },
+              child: Text('预约教室'),
+            ),
           ],
         ),
         const SizedBox(
@@ -398,9 +408,15 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
 
   //当前教师计算
   List<String> computerRoomTeacher(List<RoomReservation> roomReservations) {
-    String teacher = '无';
-    String course = '空闲';
-    return [teacher, course];
+    DateTime now = DateTime.now().toUtc();
+
+    for (var reservation in roomReservations) {
+      if (now.isAfter(reservation.startDate!) &&
+          now.isBefore(reservation.endDate!)) {
+        return [reservation.teacher, reservation.course];
+      }
+    }
+    return ['无', '空闲'];
   }
 
   @override
