@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lottie/lottie.dart';
 import 'package:xintai_school/ParseManager.dart';
 import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerParseManager.dart';
 import 'package:xintai_school/SchoolComputerSys/SchoolComputerReservationPage.dart';
@@ -132,12 +131,13 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     List<String> computerRoomTeacherDetail =
         computerRoomTeacher(roomReservations);
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Lottie.asset('assets/blackboard.json', // 替换为您的Lottie动画文件路径
-              fit: BoxFit.contain,
-              height: 150),
-        ),
+        // Expanded(
+        //   child: Lottie.asset('assets/blackboard.json', // 替换为您的Lottie动画文件路径
+        //       fit: BoxFit.contain,
+        //       height: 150),
+        // ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -161,14 +161,6 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '当前课程: ${computerRoomTeacherDetail[1]}',
-              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
-            ),
-            Text(
-              '当前教师: ${computerRoomTeacherDetail[0]}',
-              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
-            ),
             ElevatedButton(
               onPressed: () {
                 // 在这里添加按钮点击后的逻辑，例如跳转到预约页面
@@ -182,11 +174,16 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
               },
               child: Text('预约教室'),
             ),
+            Text(
+              '当前课程: ${computerRoomTeacherDetail[1]}',
+              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+            ),
+            Text(
+              '当前教师: ${computerRoomTeacherDetail[0]}',
+              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+            ),
           ],
         ),
-        const SizedBox(
-          width: 50,
-        )
       ],
     );
   }
@@ -382,6 +379,7 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
             Text('1.方向：前方为讲台方向（第一排为教室讲台前排，第八列为右侧靠门列）'),
             Text('2.上报：长按对应的电脑图标，进入上报页面'),
             Text('3.状态：绿色机器代表可用，红色代表存在故障未解决'),
+            Text('4.预约：预约教室按钮，可进行往后一周时间的预约'),
           ],
         ),
       ),

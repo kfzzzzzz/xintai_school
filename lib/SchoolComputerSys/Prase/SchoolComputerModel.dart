@@ -96,6 +96,8 @@ class RoomReservation extends ParseObject implements ParseCloneable {
   static const String keyEndDate = 'EndDate';
   static const String keyComputerRoom = 'ComputerRoom';
   static const String keyCourse = 'Course';
+  static const String keyType = 'Type';
+  static const String keyClassName = 'ClassName';
 
   String get teacher => get<String>(keyTeacher) ?? '';
   set teacher(String teacher) => set<String>(keyTeacher, teacher);
@@ -111,4 +113,10 @@ class RoomReservation extends ParseObject implements ParseCloneable {
 
   String get course => get<String>(keyCourse) ?? '';
   set course(String course) => set<String>(keyCourse, course);
+
+  int get type => get<int>(keyType) ?? 0;
+  set type(int course) => set<int>(keyType, type);
+
+  String get className => get<String>(keyClassName) ?? '';
+  set className(String className) => set<String>(keyClassName, className);
 }

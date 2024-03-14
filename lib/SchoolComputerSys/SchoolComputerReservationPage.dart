@@ -32,20 +32,24 @@ class _SchoolComputerReservationPageState
   }
 
   Widget _buildSchedule() {
-    DateTime now = DateTime.now().add(Duration(hours: 8)); // 东八区时间
-
-    List<String> timeSlots = [
-      '一二 (8:40 - 10:10)',
-      '三四 (10:30 - 12:00)',
-      '中午 (12:00 - 14:00)',
-      '五六 (14:00 - 15:30)',
-      '课后 (15:30 - 16:30)',
-    ];
-
+    DateTime now = DateTime.now().add(Duration(hours: 8)); // 东八区时
     List<String> weekdays = [];
+    Map<String, List<RoomReservation>> roomDayReservations = {};
+
     for (int i = 0; i < 7; i++) {
       DateTime date = now.add(Duration(days: i));
-      weekdays.add(_formatDate(date));
+      String formattedDate = _formatDate(date);
+      weekdays.add(formattedDate);
+      roomDayReservations[formattedDate] = [];
+    }
+
+    //将预约信息填入对应的日期map中
+    for (var roomReservation in widget.roomReservations) {
+      DateTime reservationDate = roomReservation.startDate!;
+      String formattedReservationDate = _formatDate(reservationDate);
+      if (roomDayReservations.containsKey(formattedReservationDate)) {
+        roomDayReservations[formattedReservationDate]?.add(roomReservation);
+      }
     }
 
     return Table(
@@ -69,13 +73,13 @@ class _SchoolComputerReservationPageState
               ),
           ],
         ),
-        for (var slot in timeSlots)
+        for (int type = 1; type < 6; type++)
           TableRow(
             children: [
               TableCell(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Center(child: Text(slot)),
+                  child: Center(child: Text(_formatTimeSlot(type))),
                 ),
               ),
               for (int i = 0; i < 7; i++)
@@ -83,7 +87,10 @@ class _SchoolComputerReservationPageState
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text(_getReservationInfo(i + 1, slot)),
+                      child: Text(_getReservationInfo(
+                          now.add(Duration(days: i)),
+                          type,
+                          roomDayReservations)),
                     ),
                   ),
                 ),
@@ -93,8 +100,38 @@ class _SchoolComputerReservationPageState
     );
   }
 
-  String _getReservationInfo(int weekday, String timeSlot) {
-    return " ";
+  String _getReservationInfo(DateTime Date, int type,
+      Map<String, List<RoomReservation>> roomDayReservations) {
+    String formattedReservationDate = _formatDate(Date);
+
+    if (roomDayReservations.containsKey(formattedReservationDate)) {
+      List<RoomReservation> reservations =
+          roomDayReservations[formattedReservationDate]!;
+      for (var reservation in reservations) {
+        if (reservation.type == type) {
+          return "${reservation.course} \n ${reservation.className} ${reservation.teacher}";
+        }
+      }
+    }
+
+    return "";
+  }
+
+  String _formatTimeSlot(int type) {
+    switch (type) {
+      case 1:
+        return '一二 (8:40 - 10:10)';
+      case 2:
+        return '三四 (10:30 - 12:00)';
+      case 3:
+        return '中午 (12:00 - 14:00)';
+      case 4:
+        return '五六 (14:00 - 15:30)';
+      case 5:
+        return '课后 (15:30 - 16:30)';
+      default:
+        return '';
+    }
   }
 
   String _formatDate(DateTime date) {
