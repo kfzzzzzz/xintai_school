@@ -163,14 +163,16 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
           children: [
             ElevatedButton(
               onPressed: () {
-                // 在这里添加按钮点击后的逻辑，例如跳转到预约页面
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => SchoolComputerReservationPage(
                           roomReservations: roomReservations,
                           computerRoom: _selectComputerRoom)),
-                );
+                ).then((value) {
+                  _bloc.add(SchoolComputerLoadEvent(
+                      computerRoom: _selectComputerRoom));
+                });
               },
               child: Text('预约教室'),
             ),

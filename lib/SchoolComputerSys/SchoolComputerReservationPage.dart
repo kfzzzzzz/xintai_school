@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerModel.dart';
+import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerParseManager.dart';
 
 class SchoolComputerReservationPage extends StatefulWidget {
   final List<RoomReservation> roomReservations;
   final ComputerRoom computerRoom;
 
-  const SchoolComputerReservationPage(
-      {super.key, required this.roomReservations, required this.computerRoom});
+  SchoolComputerReservationPage({
+    Key? key,
+    required this.roomReservations,
+    required this.computerRoom,
+  }) : super(key: key);
 
   @override
   _SchoolComputerReservationPageState createState() =>
@@ -25,6 +30,19 @@ class _SchoolComputerReservationPageState
             Navigator.pop(context);
           },
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.help, color: Colors.grey),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return _showManagerDialog();
+                },
+              );
+            },
+          ),
+        ],
         title: Text('${widget.computerRoom.room} 机房预约'),
       ),
       body: _buildSchedule(),
@@ -32,7 +50,8 @@ class _SchoolComputerReservationPageState
   }
 
   Widget _buildSchedule() {
-    DateTime now = DateTime.now().add(Duration(hours: 8)); // 东八区时
+    // DateTime now = DateTime.now().add(Duration(hours: 8)); // 东八区时
+    DateTime now = DateTime.now();
     List<String> weekdays = [];
     Map<String, List<RoomReservation>> roomDayReservations = {};
 
@@ -87,10 +106,11 @@ class _SchoolComputerReservationPageState
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text(_getReservationInfo(
+                      child: _buildReservationInfo(
+                          widget.computerRoom,
                           now.add(Duration(days: i)),
                           type,
-                          roomDayReservations)),
+                          roomDayReservations),
                     ),
                   ),
                 ),
@@ -98,6 +118,29 @@ class _SchoolComputerReservationPageState
           ),
       ],
     );
+  }
+
+  Widget _buildReservationInfo(
+    ComputerRoom computerRoom,
+    DateTime date,
+    int type,
+    Map<String, List<RoomReservation>> roomDayReservations,
+  ) {
+    String reservationInfo =
+        _getReservationInfo(date, type, roomDayReservations);
+
+    if (reservationInfo.isNotEmpty) {
+      return Center(
+        child: Text(reservationInfo),
+      );
+    } else {
+      return ElevatedButton(
+        onPressed: () {
+          showBookDialog(computerRoom, date, type);
+        },
+        child: Text('预约'),
+      );
+    }
   }
 
   String _getReservationInfo(DateTime Date, int type,
@@ -156,4 +199,118 @@ class _SchoolComputerReservationPageState
         return '';
     }
   }
+
+  void showBookDialog(ComputerRoom computerRoom, DateTime date, int type) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String teacherName = '';
+        String course = '';
+        String className = '';
+
+        return AlertDialog(
+          title: Text('预约机房'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('${computerRoom.room}机房'),
+              Text('${_formatDate(date)} ${_formatTimeSlot(type)}'),
+              TextFormField(
+                decoration: InputDecoration(labelText: '教师名字'),
+                onChanged: (value) {
+                  teacherName = value;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: '课程名称'),
+                onChanged: (value) {
+                  course = value;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: '班级'),
+                onChanged: (value) {
+                  className = value;
+                },
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('取消'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (teacherName == '' || className == '' || course == '') {
+                  Fluttertoast.showToast(
+                    msg: "请输入全部信息",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                  );
+                } else {
+                  await SchoolComputerParseManager()
+                      .bookComputerRoom(computerRoom, date, type, course,
+                          teacherName, className)
+                      .then((value) {
+                    Navigator.of(context).pop();
+                    Fluttertoast.showToast(
+                      msg: "预约机房成功成功",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                    );
+                  }).onError((error, stackTrace) {
+                    Fluttertoast.showToast(
+                      msg: "预约机房失败，请稍后再试或联系孔繁臻",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                    );
+                  });
+                }
+                //退出预约界面
+                Navigator.of(context).pop();
+              },
+              child: Text('预约'),
+            ),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     if (teacherName == '' || className == '' || course == '') {
+            //       Fluttertoast.showToast(
+            //         msg: "请输入全部信息",
+            //         toastLength: Toast.LENGTH_SHORT,
+            //         gravity: ToastGravity.CENTER,
+            //       );
+            //     } else {
+            //       DateTime julyFifth = DateTime(DateTime.now().year, 7, 5);
+            //       while (date.isBefore(julyFifth)) {
+            //         await SchoolComputerParseManager().bookComputerRoom(
+            //             computerRoom,
+            //             date,
+            //             type,
+            //             course,
+            //             teacherName,
+            //             className);
+            //         date = date.add(Duration(days: 7));
+            //       }
+            //       Navigator.of(context).pop();
+            //       Fluttertoast.showToast(
+            //         msg: "预约机房成功成功",
+            //         toastLength: Toast.LENGTH_SHORT,
+            //         gravity: ToastGravity.CENTER,
+            //       );
+            //     }
+            //     //退出预约界面
+            //     Navigator.of(context).pop();
+            //   },
+            //   child: Text('批量预约'),
+            // ),
+          ],
+        );
+      },
+    );
+  }
+
+  _showManagerDialog() {}
 }

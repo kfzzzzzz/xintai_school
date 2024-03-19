@@ -115,7 +115,7 @@ class RoomReservation extends ParseObject implements ParseCloneable {
   set course(String course) => set<String>(keyCourse, course);
 
   int get type => get<int>(keyType) ?? 0;
-  set type(int course) => set<int>(keyType, type);
+  set type(int type) => set<int>(keyType, type);
 
   String get className => get<String>(keyClassName) ?? '';
   set className(String className) => set<String>(keyClassName, className);
