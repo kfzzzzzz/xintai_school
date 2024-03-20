@@ -168,11 +168,12 @@ class SchoolComputerParseManager {
 //********预约********//
   Future<List<RoomReservation>> fetchRoomReservation(
       ComputerRoom computerRoom, DateTime date) async {
+    DateTime startDate = date.add(Duration(days: -1));
     DateTime endDate = date.add(Duration(days: 8));
     QueryBuilder<ParseObject> queryRoom =
         QueryBuilder<ParseObject>(RoomReservation())
           ..whereEqualTo('ComputerRoom', computerRoom)
-          ..whereGreaterThan('StartDate', date)
+          ..whereGreaterThan('StartDate', startDate)
           ..whereLessThan('StartDate', endDate);
 
     List<RoomReservation> roomReservations = [];
