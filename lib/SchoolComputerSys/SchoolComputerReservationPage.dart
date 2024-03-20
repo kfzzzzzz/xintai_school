@@ -128,33 +128,45 @@ class _SchoolComputerReservationPageState
     int type,
     Map<String, List<RoomReservation>> roomDayReservations,
   ) {
-    String reservationInfo =
+    RoomReservation? roomReservation =
         _getReservationInfo(date, type, roomDayReservations);
 
-    if (reservationInfo.isNotEmpty) {
-      return Center(
-        child: Text(
-          reservationInfo,
-          style: TextStyle(fontSize: 10.0),
+    if (roomReservation != null) {
+      return Column(children: [
+        Text(
+          '${roomReservation.course}',
+          style: TextStyle(fontSize: 10.0.px),
+          textAlign: TextAlign.left,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          '${roomReservation.className}',
+          style: TextStyle(fontSize: 10.0.px),
           textAlign: TextAlign.left,
         ),
-      );
+        Text(
+          '${roomReservation.teacher}',
+          style: TextStyle(fontSize: 10.0.px),
+          textAlign: TextAlign.left,
+        ),
+      ]);
     } else {
       return InkWell(
         onTap: () {
           showBookDialog(computerRoom, date, type);
         },
         child: Container(
-          width: 100, // 按钮宽度
-          height: 60, // 按钮高度
+          width: 100.px, // 按钮宽度
+          height: 60.px, // 按钮高度
           decoration: BoxDecoration(
             color: Colors.blue, // 按钮背景色
-            borderRadius: BorderRadius.circular(8), // 按钮圆角
+            borderRadius: BorderRadius.circular(8.px), // 按钮圆角
           ),
           child: Center(
             child: Text(
               '预 \n约',
-              style: TextStyle(fontSize: 14, color: Colors.white), // 文字样式
+              style: TextStyle(fontSize: 14.px, color: Colors.white), // 文字样式
               textAlign: TextAlign.center, // 文字居中对齐
             ),
           ),
@@ -163,7 +175,7 @@ class _SchoolComputerReservationPageState
     }
   }
 
-  String _getReservationInfo(DateTime Date, int type,
+  RoomReservation? _getReservationInfo(DateTime Date, int type,
       Map<String, List<RoomReservation>> roomDayReservations) {
     String formattedReservationDate = _formatDate(Date);
 
@@ -172,26 +184,26 @@ class _SchoolComputerReservationPageState
           roomDayReservations[formattedReservationDate]!;
       for (var reservation in reservations) {
         if (reservation.type == type) {
-          return "${reservation.course}\n ${reservation.className}${reservation.teacher}";
+          return reservation;
         }
       }
     }
 
-    return "";
+    return null;
   }
 
   String _formatTimeSlot(int type) {
     switch (type) {
       case 1:
-        return '一\n二';
+        return '一二';
       case 2:
-        return '三\n四';
+        return '三四';
       case 3:
-        return '中\n午';
+        return '中午';
       case 4:
-        return '五\n六';
+        return '五六';
       case 5:
-        return '课\n后';
+        return '课后';
       default:
         return '';
     }
@@ -202,19 +214,19 @@ class _SchoolComputerReservationPageState
     String day = date.day.toString().padLeft(2, '0');
     switch (date.weekday) {
       case 1:
-        return '$month\n-$day\n周一';
+        return '$month-$day\n周一';
       case 2:
-        return '$month\n-$day\n周二';
+        return '$month-$day\n周二';
       case 3:
-        return '$month\n-$day\n周三';
+        return '$month-$day\n周三';
       case 4:
-        return '$month\n-$day\n周四';
+        return '$month-$day\n周四';
       case 5:
-        return '$month\n-$day\n周五';
+        return '$month-$day\n周五';
       case 6:
-        return '$month\n-$day\n周六';
+        return '$month-$day\n周六';
       case 7:
-        return '$month\n-$day\n周日';
+        return '$month-$day\n周日';
       default:
         return '';
     }
@@ -229,12 +241,11 @@ class _SchoolComputerReservationPageState
         String className = '';
 
         return AlertDialog(
-          title: Text('预约机房'),
+          title: Text('预约机房${computerRoom.room}'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('${computerRoom.room}机房'),
-              Text('${_formatDate(date)} ${_formatTimeSlot(type)}'),
+              Text('日期:${_formatDate(date)} ${_formatTimeSlot(type)}节'),
               TextFormField(
                 decoration: InputDecoration(labelText: '教师名字'),
                 onChanged: (value) {
