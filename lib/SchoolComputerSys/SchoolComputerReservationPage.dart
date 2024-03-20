@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerModel.dart';
 import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerParseManager.dart';
+import 'package:xintai_school/Utils/XTScreenAdaptation.dart';
 
 class SchoolComputerReservationPage extends StatefulWidget {
   final List<RoomReservation> roomReservations;
@@ -22,6 +23,7 @@ class _SchoolComputerReservationPageState
     extends State<SchoolComputerReservationPage> {
   @override
   Widget build(BuildContext context) {
+    XTScreenAdaptation.init(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
