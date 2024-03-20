@@ -131,14 +131,32 @@ class _SchoolComputerReservationPageState
 
     if (reservationInfo.isNotEmpty) {
       return Center(
-        child: Text(reservationInfo),
+        child: Text(
+          reservationInfo,
+          style: TextStyle(fontSize: 10.0),
+          textAlign: TextAlign.left,
+        ),
       );
     } else {
-      return ElevatedButton(
-        onPressed: () {
+      return InkWell(
+        onTap: () {
           showBookDialog(computerRoom, date, type);
         },
-        child: Text('预约'),
+        child: Container(
+          width: 100, // 按钮宽度
+          height: 60, // 按钮高度
+          decoration: BoxDecoration(
+            color: Colors.blue, // 按钮背景色
+            borderRadius: BorderRadius.circular(8), // 按钮圆角
+          ),
+          child: Center(
+            child: Text(
+              '预 \n约',
+              style: TextStyle(fontSize: 14, color: Colors.white), // 文字样式
+              textAlign: TextAlign.center, // 文字居中对齐
+            ),
+          ),
+        ),
       );
     }
   }
@@ -152,7 +170,7 @@ class _SchoolComputerReservationPageState
           roomDayReservations[formattedReservationDate]!;
       for (var reservation in reservations) {
         if (reservation.type == type) {
-          return "${reservation.course} \n ${reservation.className} ${reservation.teacher}";
+          return "${reservation.course}\n ${reservation.className}${reservation.teacher}";
         }
       }
     }
@@ -163,15 +181,15 @@ class _SchoolComputerReservationPageState
   String _formatTimeSlot(int type) {
     switch (type) {
       case 1:
-        return '一二 (8:40 - 10:10)';
+        return '一\n二';
       case 2:
-        return '三四 (10:30 - 12:00)';
+        return '三\n四';
       case 3:
-        return '中午 (12:00 - 14:00)';
+        return '中\n午';
       case 4:
-        return '五六 (14:00 - 15:30)';
+        return '五\n六';
       case 5:
-        return '课后 (15:30 - 16:30)';
+        return '课\n后';
       default:
         return '';
     }
@@ -182,19 +200,19 @@ class _SchoolComputerReservationPageState
     String day = date.day.toString().padLeft(2, '0');
     switch (date.weekday) {
       case 1:
-        return '$month-$day 周一';
+        return '$month\n-$day\n周一';
       case 2:
-        return '$month-$day 周二';
+        return '$month\n-$day\n周二';
       case 3:
-        return '$month-$day 周三';
+        return '$month\n-$day\n周三';
       case 4:
-        return '$month-$day 周四';
+        return '$month\n-$day\n周四';
       case 5:
-        return '$month-$day 周五';
+        return '$month\n-$day\n周五';
       case 6:
-        return '$month-$day 周六';
+        return '$month\n-$day\n周六';
       case 7:
-        return '$month-$day 周日';
+        return '$month\n-$day\n周日';
       default:
         return '';
     }
@@ -312,5 +330,25 @@ class _SchoolComputerReservationPageState
     );
   }
 
-  _showManagerDialog() {}
+  _showManagerDialog() {
+    return AlertDialog(
+      title: Text('预约帮助'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            Text(
+                '预约分五个时间段:\n一二 (8:40 - 10:10)\n三四 (10:30 - 12:00)\n中午 (12:00 - 14:00)\n五六 (14:00 - 15:30)\n课后 (15:30 - 16:30)')
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // 关闭对话框
+          },
+          child: Text('关闭'),
+        ),
+      ],
+    );
+  }
 }
