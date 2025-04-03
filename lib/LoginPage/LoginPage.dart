@@ -4,6 +4,8 @@ import 'package:xintai_school/ParseManager.dart';
 import 'package:xintai_school/SchoolComputerSys/SchoolComputerSysPage.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -89,7 +91,8 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -126,7 +129,8 @@ class _LoginPageState extends State<LoginPage> {
       _getCurrentUser().then((_) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SchoolComputerSysPage()),
+          MaterialPageRoute(
+              builder: (context) => const SchoolComputerSysPage()),
         );
       });
     } else {
@@ -146,7 +150,8 @@ class _LoginPageState extends State<LoginPage> {
       if (_currentUser != '无用户') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SchoolComputerSysPage()),
+          MaterialPageRoute(
+              builder: (context) => const SchoolComputerSysPage()),
         );
       }
     });
@@ -157,14 +162,14 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text('Login Failed'),
+          title: const Text('Login Failed'),
           content: Text(failureReason),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );

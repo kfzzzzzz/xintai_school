@@ -10,6 +10,8 @@ import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerModel.dart';
 import 'bloc/school_computer_sys_bloc.dart';
 
 class SchoolComputerSysPage extends StatefulWidget {
+  const SchoolComputerSysPage({super.key});
+
   @override
   _SchoolComputerSysPageState createState() => _SchoolComputerSysPageState();
 }
@@ -87,7 +89,7 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                     onPressed: () {
                       _bloc.add(SchoolComputerInitialEvent()); // 这里替换为你的事件
                     },
-                    child: Text('刷新'),
+                    child: const Text('刷新'),
                   ),
                 ],
               ),
@@ -105,7 +107,7 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
   Widget _buildDropDownButton(List<ComputerRoom> computerRooms) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       child: DropdownButton<ComputerRoom>(
         value: _selectComputerRoom,
         onChanged: (ComputerRoom? newValue) {
@@ -133,25 +135,23 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Expanded(
-        //   child: Lottie.asset('assets/blackboard.json', // 替换为您的Lottie动画文件路径
-        //       fit: BoxFit.contain,
-        //       height: 150),
-        // ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '电脑总数: ${computerRoomComputerDetail[0]}台',
-              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+              style:
+                  const TextStyle(color: Colors.black, height: 2, fontSize: 20),
             ),
             Text(
               '故障数量: ${computerRoomComputerDetail[1]}台',
-              style: TextStyle(color: Colors.red, height: 2, fontSize: 20),
+              style:
+                  const TextStyle(color: Colors.red, height: 2, fontSize: 20),
             ),
             Text(
               '可用数量: ${computerRoomComputerDetail[2]}台',
-              style: TextStyle(color: Colors.green, height: 2, fontSize: 20),
+              style:
+                  const TextStyle(color: Colors.green, height: 2, fontSize: 20),
             ),
           ],
         ),
@@ -174,15 +174,17 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                       computerRoom: _selectComputerRoom));
                 });
               },
-              child: Text('预约教室'),
+              child: const Text('预约教室'),
             ),
             Text(
               '当前课程: ${computerRoomTeacherDetail[1]}',
-              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+              style:
+                  const TextStyle(color: Colors.black, height: 2, fontSize: 20),
             ),
             Text(
               '当前教师: ${computerRoomTeacherDetail[0]}',
-              style: TextStyle(color: Colors.black, height: 2, fontSize: 20),
+              style:
+                  const TextStyle(color: Colors.black, height: 2, fontSize: 20),
             ),
           ],
         ),
@@ -211,16 +213,16 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
           if (rowIndex == 0 && colIndex == 0) {
             text = '';
           } else if (rowIndex == 0) {
-            text = '${colIndex}列';
+            text = '$colIndex列';
           } else {
-            text = '${rowIndex}排';
+            text = '$rowIndex排';
           }
           return Container(
             alignment: Alignment.center,
             color: Colors.grey[300],
             child: Text(
               text,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           );
         } else {
@@ -292,18 +294,18 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                     int column = 0; // 用于存储填写的列号
 
                     return AlertDialog(
-                      title: Text("管理弹窗"),
+                      title: const Text("管理弹窗"),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextField(
-                            decoration: InputDecoration(labelText: '行'),
+                            decoration: const InputDecoration(labelText: '行'),
                             onChanged: (value) {
                               row = int.tryParse(value) ?? 0; // 解析行号并存储
                             },
                           ),
                           TextField(
-                            decoration: InputDecoration(labelText: '列'),
+                            decoration: const InputDecoration(labelText: '列'),
                             onChanged: (value) {
                               column = int.tryParse(value) ?? 0; // 解析列号并存储
                             },
@@ -332,13 +334,13 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                             }
                             Navigator.of(context).pop();
                           },
-                          child: Text("提交"),
+                          child: const Text("提交"),
                         ),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text("关闭"),
+                          child: const Text("关闭"),
                         ),
                       ],
                     );
@@ -349,14 +351,14 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("管理弹窗"),
-                      content: Text("请联系管理员孔繁臻"),
+                      title: const Text("管理弹窗"),
+                      content: const Text("请联系管理员孔繁臻"),
                       actions: [
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text("关闭"),
+                          child: const Text("关闭"),
                         ),
                       ],
                     );
@@ -365,7 +367,7 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
               }
             });
           },
-          child: Text("增删电脑"),
+          child: const Text("增删电脑"),
         ),
       ],
     );
@@ -374,8 +376,8 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
 // 帮助弹窗
   Widget _buildHelpDialog(BuildContext context) {
     return AlertDialog(
-      title: Text('使用帮助'),
-      content: SingleChildScrollView(
+      title: const Text('使用帮助'),
+      content: const SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
             Text('1.方向：前方为讲台方向（第一排为教室讲台前排，第八列为右侧靠门列）'),
@@ -390,7 +392,7 @@ class _SchoolComputerSysPageState extends State<SchoolComputerSysPage> {
           onPressed: () {
             Navigator.of(context).pop(); // 关闭对话框
           },
-          child: Text('关闭'),
+          child: const Text('关闭'),
         ),
       ],
     );

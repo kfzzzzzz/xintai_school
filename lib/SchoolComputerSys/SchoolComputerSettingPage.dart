@@ -41,8 +41,8 @@ class _SchoolComputerSettingPageState extends State<SchoolComputerSettingPage> {
           cells: [
             DataCell(Text('${index + 1}')),
             DataCell(Text(reportDate)),
-            DataCell(Text('${log.teacher}')),
-            DataCell(Text('${log.describe}')),
+            DataCell(Text(log.teacher)),
+            DataCell(Text(log.describe)),
             DataCell(Text('${log.state}')),
             DataCell(Text(repairDate ?? "")),
           ],
@@ -51,19 +51,19 @@ class _SchoolComputerSettingPageState extends State<SchoolComputerSettingPage> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('您是否确认已经维修该问题？'),
+                  title: const Text('您是否确认已经维修该问题？'),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(false); // 关闭对话框并返回 false
                       },
-                      child: Text('取消'),
+                      child: const Text('取消'),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(true); // 关闭对话框并返回 true
                       },
-                      child: Text('确认'),
+                      child: const Text('确认'),
                     ),
                   ],
                 );
@@ -106,7 +106,7 @@ class _SchoolComputerSettingPageState extends State<SchoolComputerSettingPage> {
                 columnSpacing: 5,
                 horizontalMargin: 0,
                 dataRowHeight: 160,
-                columns: [
+                columns: const [
                   DataColumn2(label: Text('序号'), size: ColumnSize.S),
                   DataColumn2(
                     label: Text('上报时间'),
@@ -134,18 +134,18 @@ class _SchoolComputerSettingPageState extends State<SchoolComputerSettingPage> {
                     String problemDescription = '';
 
                     return AlertDialog(
-                      title: Text('上报问题'),
+                      title: const Text('上报问题'),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextFormField(
-                            decoration: InputDecoration(labelText: '教师名字'),
+                            decoration: const InputDecoration(labelText: '教师名字'),
                             onChanged: (value) {
                               teacherName = value;
                             },
                           ),
                           TextFormField(
-                            decoration: InputDecoration(labelText: '问题描述'),
+                            decoration: const InputDecoration(labelText: '问题描述'),
                             onChanged: (value) {
                               problemDescription = value;
                             },
@@ -157,7 +157,7 @@ class _SchoolComputerSettingPageState extends State<SchoolComputerSettingPage> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text('取消'),
+                          child: const Text('取消'),
                         ),
                         ElevatedButton(
                           onPressed: () async {
@@ -187,14 +187,14 @@ class _SchoolComputerSettingPageState extends State<SchoolComputerSettingPage> {
                               });
                             }
                           },
-                          child: Text('上报'),
+                          child: const Text('上报'),
                         ),
                       ],
                     );
                   },
                 );
               },
-              child: Text('上报问题'),
+              child: const Text('上报问题'),
             ),
           ],
         ),

@@ -168,8 +168,8 @@ class SchoolComputerParseManager {
 //********预约********//
   Future<List<RoomReservation>> fetchRoomReservation(
       ComputerRoom computerRoom, DateTime date) async {
-    DateTime startDate = date.add(Duration(days: -1));
-    DateTime endDate = date.add(Duration(days: 8));
+    DateTime startDate = date.add(const Duration(days: -1));
+    DateTime endDate = date.add(const Duration(days: 8));
     QueryBuilder<ParseObject> queryRoom =
         QueryBuilder<ParseObject>(RoomReservation())
           ..whereEqualTo('ComputerRoom', computerRoom)
@@ -210,7 +210,7 @@ class SchoolComputerParseManager {
         roomReservation.startDate =
             DateTime(date.year, date.month, date.day, 8, 40);
         roomReservation.endDate =
-            DateTime(date.year, date.month, date.day, 11, 10);
+            DateTime(date.year, date.month, date.day, 10, 10);
         break;
       case 2:
         roomReservation.startDate =
@@ -220,21 +220,9 @@ class SchoolComputerParseManager {
         break;
       case 3:
         roomReservation.startDate =
-            DateTime(date.year, date.month, date.day, 12, 00);
-        roomReservation.endDate =
-            DateTime(date.year, date.month, date.day, 14, 00);
-        break;
-      case 4:
-        roomReservation.startDate =
             DateTime(date.year, date.month, date.day, 14, 00);
         roomReservation.endDate =
             DateTime(date.year, date.month, date.day, 15, 30);
-        break;
-      case 5:
-        roomReservation.startDate =
-            DateTime(date.year, date.month, date.day, 15, 30);
-        roomReservation.endDate =
-            DateTime(date.year, date.month, date.day, 16, 30);
         break;
       default:
         break;
@@ -248,56 +236,54 @@ class SchoolComputerParseManager {
     }
   }
 
-  //批量预约
-  Future<void> bookMoreComputerRoom(ComputerRoom computerRoom, DateTime date,
-      int type, String course, String teacher, String className) async {
-    RoomReservation roomReservation = RoomReservation();
-    roomReservation.teacher = teacher;
-    roomReservation.className = className;
-    roomReservation.course = course;
-    roomReservation
-        .addRelation(RoomReservation.keyComputerRoom, [computerRoom]);
-    roomReservation.type = type;
-    switch (type) {
-      case 1:
-        roomReservation.startDate =
-            DateTime(date.year, date.month, date.day, 8, 40);
-        roomReservation.endDate =
-            DateTime(date.year, date.month, date.day, 11, 10);
-        break;
-      case 2:
-        roomReservation.startDate =
-            DateTime(date.year, date.month, date.day, 10, 30);
-        roomReservation.endDate =
-            DateTime(date.year, date.month, date.day, 12, 00);
-        break;
-      case 3:
-        roomReservation.startDate =
-            DateTime(date.year, date.month, date.day, 12, 00);
-        roomReservation.endDate =
-            DateTime(date.year, date.month, date.day, 14, 00);
-        break;
-      case 4:
-        roomReservation.startDate =
-            DateTime(date.year, date.month, date.day, 14, 00);
-        roomReservation.endDate =
-            DateTime(date.year, date.month, date.day, 15, 30);
-        break;
-      case 5:
-        roomReservation.startDate =
-            DateTime(date.year, date.month, date.day, 15, 30);
-        roomReservation.endDate =
-            DateTime(date.year, date.month, date.day, 16, 30);
-        break;
-      default:
-        break;
-    }
-    try {
-      await roomReservation.save().then((value) {
-        print('已成功预约机房');
-      });
-    } catch (e) {
-      print('预约机房时出错：$e');
+// 批量预约函数：按照每周递增进行预约
+  Future<void> bookMoreComputerRoom(
+      ComputerRoom computerRoom,
+      DateTime date,
+      int type,
+      String course,
+      String teacher,
+      String className,
+      int count) async {
+    for (int i = 0; i < count; i++) {
+      DateTime newDate = date.add(Duration(days: 7 * i)); // 每次加 7 天
+      RoomReservation roomReservation = RoomReservation();
+      roomReservation.teacher = teacher;
+      roomReservation.className = className;
+      roomReservation.course = course;
+      roomReservation
+          .addRelation(RoomReservation.keyComputerRoom, [computerRoom]);
+      roomReservation.type = type;
+
+      switch (type) {
+        case 1:
+          roomReservation.startDate =
+              DateTime(newDate.year, newDate.month, newDate.day, 8, 40);
+          roomReservation.endDate =
+              DateTime(newDate.year, newDate.month, newDate.day, 10, 10);
+          break;
+        case 2:
+          roomReservation.startDate =
+              DateTime(newDate.year, newDate.month, newDate.day, 10, 30);
+          roomReservation.endDate =
+              DateTime(newDate.year, newDate.month, newDate.day, 12, 00);
+          break;
+        case 3:
+          roomReservation.startDate =
+              DateTime(newDate.year, newDate.month, newDate.day, 14, 00);
+          roomReservation.endDate =
+              DateTime(newDate.year, newDate.month, newDate.day, 15, 30);
+          break;
+        default:
+          break;
+      }
+
+      try {
+        await roomReservation.save();
+        print('已成功预约机房: ${newDate.toLocal()}');
+      } catch (e) {
+        print('预约机房时出错：$e');
+      }
     }
   }
 }

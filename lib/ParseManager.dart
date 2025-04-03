@@ -11,7 +11,7 @@ class ParseManager {
   ParseManager._internal();
 
   static const String _applicationId = 'kfzzzzzz.SimulateLocation';
-  static const String _serverUrl = 'http://kfzzzzzz.cn:1337/parse';
+  static const String _serverUrl = 'https://kfzzzzzz.cn/parse';
   static const String _clientKey = 'kfzzzzzz.SimulateLocation';
 
   bool _initialized = false;

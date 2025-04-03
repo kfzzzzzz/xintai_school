@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerModel.dart';
 import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerParseManager.dart';
@@ -8,11 +9,11 @@ class SchoolComputerReservationPage extends StatefulWidget {
   final List<RoomReservation> roomReservations;
   final ComputerRoom computerRoom;
 
-  SchoolComputerReservationPage({
-    Key? key,
+  const SchoolComputerReservationPage({
+    super.key,
     required this.roomReservations,
     required this.computerRoom,
-  }) : super(key: key);
+  });
 
   @override
   _SchoolComputerReservationPageState createState() =>
@@ -27,7 +28,7 @@ class _SchoolComputerReservationPageState
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -45,14 +46,19 @@ class _SchoolComputerReservationPageState
             },
           ),
         ],
-        title: Text('${widget.computerRoom.room} 机房预约'),
+        title: GestureDetector(
+          // onTap: _onTitleTapped, // 监听点击
+          child: Text('${widget.computerRoom.room} 机房预约'),
+        ),
       ),
-      body: _buildSchedule(),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical, // 仅允许垂直滚动
+        child: _buildSchedule(),
+      ),
     );
   }
 
   Widget _buildSchedule() {
-    // DateTime now = DateTime.now().add(Duration(hours: 8)); // 东八区时
     DateTime now = DateTime.now();
     List<String> weekdays = [];
     Map<String, List<RoomReservation>> roomDayReservations = {};
@@ -77,42 +83,45 @@ class _SchoolComputerReservationPageState
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       border: TableBorder.all(),
       children: [
+        // Header row with time slots as columns
         TableRow(
           children: [
-            TableCell(child: SizedBox()),
-            for (var weekday in weekdays)
+            const TableCell(child: SizedBox()), // Empty cell for corner
+            for (int type = 1; type < 4; type++)
               TableCell(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
                     child: Text(
-                      weekday,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      _formatTimeSlot(type),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
               ),
           ],
         ),
-        for (int type = 1; type < 6; type++)
+        // Adding each day as a row
+        for (int i = 0; i < 7; i++)
           TableRow(
             children: [
               TableCell(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Center(child: Text(_formatTimeSlot(type))),
+                  child: Center(child: Text(weekdays[i])),
                 ),
               ),
-              for (int i = 0; i < 7; i++)
+              for (int type = 1; type < 4; type++)
                 TableCell(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: _buildReservationInfo(
-                          widget.computerRoom,
-                          now.add(Duration(days: i)),
-                          type,
-                          roomDayReservations),
+                        widget.computerRoom,
+                        now.add(Duration(days: i)),
+                        type,
+                        roomDayReservations,
+                      ),
                     ),
                   ),
                 ),
@@ -134,19 +143,19 @@ class _SchoolComputerReservationPageState
     if (roomReservation != null) {
       return Column(children: [
         Text(
-          '${roomReservation.course}',
+          roomReservation.course,
           style: TextStyle(fontSize: 10.0.px),
           textAlign: TextAlign.left,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
         Text(
-          '${roomReservation.className}',
+          roomReservation.className,
           style: TextStyle(fontSize: 10.0.px),
           textAlign: TextAlign.left,
         ),
         Text(
-          '${roomReservation.teacher}',
+          roomReservation.teacher,
           style: TextStyle(fontSize: 10.0.px),
           textAlign: TextAlign.left,
         ),
@@ -165,7 +174,7 @@ class _SchoolComputerReservationPageState
           ),
           child: Center(
             child: Text(
-              '预 \n约',
+              '预约',
               style: TextStyle(fontSize: 14.px, color: Colors.white), // 文字样式
               textAlign: TextAlign.center, // 文字居中对齐
             ),
@@ -199,11 +208,7 @@ class _SchoolComputerReservationPageState
       case 2:
         return '三四';
       case 3:
-        return '中午';
-      case 4:
         return '五六';
-      case 5:
-        return '课后';
       default:
         return '';
     }
@@ -232,6 +237,16 @@ class _SchoolComputerReservationPageState
     }
   }
 
+  // int _titleTapCount = 5;
+  // void _onTitleTapped() {
+  //   setState(() {
+  //     _titleTapCount--;
+  //     if (_titleTapCount == -1) {
+  //       _titleTapCount = 5;
+  //     }
+  //   });
+  // }
+
   void showBookDialog(ComputerRoom computerRoom, DateTime date, int type) {
     showDialog(
       context: context,
@@ -239,6 +254,7 @@ class _SchoolComputerReservationPageState
         String teacherName = '';
         String course = '';
         String className = '';
+        int dateNum = 1;
 
         return AlertDialog(
           title: Text('预约机房${computerRoom.room}'),
@@ -247,23 +263,37 @@ class _SchoolComputerReservationPageState
             children: [
               Text('日期:${_formatDate(date)} ${_formatTimeSlot(type)}节'),
               TextFormField(
-                decoration: InputDecoration(labelText: '教师名字'),
+                decoration: const InputDecoration(labelText: '教师名字'),
                 onChanged: (value) {
                   teacherName = value;
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: '课程名称'),
+                decoration: const InputDecoration(labelText: '课程名称'),
                 onChanged: (value) {
                   course = value;
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: '班级'),
+                decoration: const InputDecoration(labelText: '班级'),
                 onChanged: (value) {
                   className = value;
                 },
               ),
+              // if (_titleTapCount == 0)
+              TextFormField(
+                decoration: const InputDecoration(labelText: '周数'),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, // 只允许输入数字
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    dateNum =
+                        int.tryParse(value) ?? 0; // 处理转换错误，确保 dateNum 为 int
+                  });
+                },
+              )
             ],
           ),
           actions: [
@@ -271,7 +301,7 @@ class _SchoolComputerReservationPageState
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('取消'),
+              child: const Text('取消'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -303,7 +333,40 @@ class _SchoolComputerReservationPageState
                 //退出预约界面
                 Navigator.of(context).pop();
               },
-              child: Text('预约'),
+              child: const Text('预约'),
+            ),
+            //if (_titleTapCount == 0)
+            ElevatedButton(
+              onPressed: () async {
+                if (teacherName == '' || className == '' || course == '') {
+                  Fluttertoast.showToast(
+                    msg: "请输入全部信息",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                  );
+                } else {
+                  await SchoolComputerParseManager()
+                      .bookMoreComputerRoom(computerRoom, date, type, course,
+                          teacherName, className, dateNum)
+                      .then((value) {
+                    Navigator.of(context).pop();
+                    Fluttertoast.showToast(
+                      msg: "预约机房成功成功",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                    );
+                  }).onError((error, stackTrace) {
+                    Fluttertoast.showToast(
+                      msg: "预约机房失败，请稍后再试或联系孔繁臻",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                    );
+                  });
+                }
+                //退出预约界面
+                Navigator.of(context).pop();
+              },
+              child: const Text('批量预约'),
             ),
             // ElevatedButton(
             //   onPressed: () async {
@@ -316,13 +379,14 @@ class _SchoolComputerReservationPageState
             //     } else {
             //       DateTime julyFifth = DateTime(DateTime.now().year, 7, 5);
             //       while (date.isBefore(julyFifth)) {
-            //         await SchoolComputerParseManager().bookComputerRoom(
+            //         await SchoolComputerParseManager().bookMoreComputerRoom(
             //             computerRoom,
             //             date,
             //             type,
             //             course,
             //             teacherName,
-            //             className);
+            //             className,
+            //             );
             //         date = date.add(Duration(days: 7));
             //       }
             //       Navigator.of(context).pop();
@@ -345,8 +409,8 @@ class _SchoolComputerReservationPageState
 
   _showManagerDialog() {
     return AlertDialog(
-      title: Text('预约帮助'),
-      content: SingleChildScrollView(
+      title: const Text('预约帮助'),
+      content: const SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
             Text(
@@ -359,7 +423,7 @@ class _SchoolComputerReservationPageState
           onPressed: () {
             Navigator.of(context).pop(); // 关闭对话框
           },
-          child: Text('关闭'),
+          child: const Text('关闭'),
         ),
       ],
     );
