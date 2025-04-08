@@ -47,7 +47,7 @@ class _SchoolComputerReservationPageState
           ),
         ],
         title: GestureDetector(
-          // onTap: _onTitleTapped, // 监听点击
+          onTap: _onTitleTapped, // 监听点击
           child: Text('${widget.computerRoom.room} 机房预约'),
         ),
       ),
@@ -237,15 +237,13 @@ class _SchoolComputerReservationPageState
     }
   }
 
-  // int _titleTapCount = 5;
-  // void _onTitleTapped() {
-  //   setState(() {
-  //     _titleTapCount--;
-  //     if (_titleTapCount == -1) {
-  //       _titleTapCount = 5;
-  //     }
-  //   });
-  // }
+  int _titleTapCount = 5;
+  void _onTitleTapped() {
+    _titleTapCount--;
+    if (_titleTapCount == -1) {
+      _titleTapCount = 5;
+    }
+  }
 
   void showBookDialog(ComputerRoom computerRoom, DateTime date, int type) {
     showDialog(
@@ -280,20 +278,20 @@ class _SchoolComputerReservationPageState
                   className = value;
                 },
               ),
-              // if (_titleTapCount == 0)
-              TextFormField(
-                decoration: const InputDecoration(labelText: '周数'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly, // 只允许输入数字
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    dateNum =
-                        int.tryParse(value) ?? 0; // 处理转换错误，确保 dateNum 为 int
-                  });
-                },
-              )
+              if (_titleTapCount == 0)
+                TextFormField(
+                  decoration: const InputDecoration(labelText: '周数'),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly, // 只允许输入数字
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      dateNum =
+                          int.tryParse(value) ?? 0; // 处理转换错误，确保 dateNum 为 int
+                    });
+                  },
+                )
             ],
           ),
           actions: [
@@ -335,39 +333,39 @@ class _SchoolComputerReservationPageState
               },
               child: const Text('预约'),
             ),
-            //if (_titleTapCount == 0)
-            ElevatedButton(
-              onPressed: () async {
-                if (teacherName == '' || className == '' || course == '') {
-                  Fluttertoast.showToast(
-                    msg: "请输入全部信息",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                  );
-                } else {
-                  await SchoolComputerParseManager()
-                      .bookMoreComputerRoom(computerRoom, date, type, course,
-                          teacherName, className, dateNum)
-                      .then((value) {
-                    Navigator.of(context).pop();
+            if (_titleTapCount == 0)
+              ElevatedButton(
+                onPressed: () async {
+                  if (teacherName == '' || className == '' || course == '') {
                     Fluttertoast.showToast(
-                      msg: "预约机房成功成功",
+                      msg: "请输入全部信息",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.CENTER,
                     );
-                  }).onError((error, stackTrace) {
-                    Fluttertoast.showToast(
-                      msg: "预约机房失败，请稍后再试或联系孔繁臻",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                    );
-                  });
-                }
-                //退出预约界面
-                Navigator.of(context).pop();
-              },
-              child: const Text('批量预约'),
-            ),
+                  } else {
+                    await SchoolComputerParseManager()
+                        .bookMoreComputerRoom(computerRoom, date, type, course,
+                            teacherName, className, dateNum)
+                        .then((value) {
+                      Navigator.of(context).pop();
+                      Fluttertoast.showToast(
+                        msg: "预约机房成功成功",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                      );
+                    }).onError((error, stackTrace) {
+                      Fluttertoast.showToast(
+                        msg: "预约机房失败，请稍后再试或联系孔繁臻",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                      );
+                    });
+                  }
+                  //退出预约界面
+                  Navigator.of(context).pop();
+                },
+                child: const Text('批量预约'),
+              ),
             // ElevatedButton(
             //   onPressed: () async {
             //     if (teacherName == '' || className == '' || course == '') {
