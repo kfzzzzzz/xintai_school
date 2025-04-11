@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerModel.dart';
 import 'package:xintai_school/SchoolComputerSys/Prase/SchoolComputerParseManager.dart';
 import 'package:xintai_school/Utils/XTScreenAdaptation.dart';
+import 'package:xintai_school/WechatRobot.dart';
 
 class SchoolComputerReservationPage extends StatefulWidget {
   final List<RoomReservation> roomReservations;
@@ -315,6 +316,11 @@ class _SchoolComputerReservationPageState
                           teacherName, className)
                       .then((value) {
                     Navigator.of(context).pop();
+                    sendReservationSuccess(
+                        teacher: teacherName,
+                        computerRoom: computerRoom.room,
+                        date: date,
+                        type: type);
                     Fluttertoast.showToast(
                       msg: "预约机房成功成功",
                       toastLength: Toast.LENGTH_SHORT,
