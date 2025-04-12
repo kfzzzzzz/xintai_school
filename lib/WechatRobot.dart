@@ -16,7 +16,7 @@ Future<void> sendReservationSuccess({
       "Teacher": teacher,
       "computerRoom": computerRoom,
       "date": date.toIso8601String(),
-      "Type": type,
+      "Type": type.toString(),
     }),
   );
 
